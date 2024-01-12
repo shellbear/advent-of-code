@@ -1,6 +1,3 @@
-use core::panic;
-
-#[derive(Debug)]
 enum InputState {
     Empty,
     Single(u32),
@@ -49,39 +46,32 @@ pub fn trebuchet_two(input: &str) -> u32 {
     input
         .lines()
         .map(|line: &str| {
-            let mut results: Vec<u32> = vec![];
+            let mut state = InputState::new();
             let mut chars = line.chars();
+            let mut c: Option<char>;
 
-            while let Some(c) = chars.next() {
-                if c.is_numeric() {
-                    let value = c.to_string().parse::<u32>().unwrap();
-                    results.push(value);
-                } else {
-                    let to_find = format!("{}{}", c, chars.as_str());
-
-                    let mut index = 0u32;
-                    for number in NUMBERS {
-                        index += 1;
-                        if to_find.starts_with(number) {
-                            for _ in 0..number.len() - 2 {
-                                chars.next();
-                            }
-
-                            results.push(index);
+            while {
+                let mut index = 0u32;
+                for number in NUMBERS {
+                    index += 1;
+                    if chars.as_str().starts_with(number) {
+                        for _ in 0..number.len() - 2 {
+                            chars.next();
                         }
+
+                        state = state.update(index);
                     }
+                }
+
+                c = chars.next();
+                c.is_some()
+            } {
+                if let Some(value) = c.unwrap().to_digit(10) {
+                    state = state.update(value);
                 }
             }
 
-            let result = match results[..] {
-                [first, .., second] => {
-                    format!("{}{}", first, second)
-                }
-                [num] => format!("{}{}", num, num),
-                _ => panic!("Invalid Line: {:?}", line),
-            };
-
-            result.parse::<u32>().unwrap()
+            state.sum()
         })
         .sum()
 }
