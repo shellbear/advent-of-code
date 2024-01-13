@@ -26,6 +26,7 @@ impl InputState {
     }
 }
 
+#[aoc(day1, part1)]
 pub fn trebuchet_one(input: &str) -> u32 {
     input
         .lines()
@@ -42,6 +43,7 @@ static NUMBERS: &'static [&str; 9] = &[
     "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
 ];
 
+#[aoc(day1, part2)]
 pub fn trebuchet_two(input: &str) -> u32 {
     input
         .lines()
