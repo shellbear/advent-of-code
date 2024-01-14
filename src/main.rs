@@ -1,6 +1,6 @@
 fn main() {
-    let input: &str = include_str!("../input/day3.txt").trim();
-    let result = aoc2023::day3::gear_ratios(input);
+    let input: &str = include_str!("../input/day4.txt").trim();
+    let result = aoc2023::day4::scratchcards(input);
 
     println!("Result: {:?}", result);
 }
