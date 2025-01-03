@@ -18,25 +18,40 @@ let split_pairs pairs =
   in
   aux pairs [] []
 
-let parse_input (input : string) : int =
-  let (lines : (int * int) list) =
+let parse_input input =
     input |> String.split_on_char '\n'
     |> List.map (fun line ->
-           line |> String.split_on_char ' '
-           |> List.filter (fun c -> compare c "" != 0)
-           |> List.map int_of_string
-           |> fun values ->
-           match values with
-           | [ first; second ] -> (first, second)
-           | _ -> failwith "invalid input")
-  in
+          line |> String.split_on_char ' '
+          |> List.filter (fun c -> compare c "" != 0)
+          |> List.map int_of_string
+          |> fun values ->
+          match values with
+          | [ first; second ] -> (first, second)
+          | _ -> failwith "invalid input")
 
+let part_1() =
+  let lines = parse_input input in
   let first, second =
     split_pairs lines |> fun (first, second) ->
     (List.sort compare first, List.sort compare second)
   in
-  sum_pairs first second
+  let result = sum_pairs first second in
+  print_endline (string_of_int result)
+
+let part_2() =
+  let lines = parse_input input in
+
+  let rec sum (list: (int * int) list) acc = match list with
+    | [] -> 0
+    | (first, second) :: rest ->
+        let count = List.length (List.filter (fun (_, entry) -> entry == first) lines) in
+        sum rest acc + first * count  in
+
+  let result = sum lines 0 in
+  print_endline (string_of_int result)
+
 
 let () =
-  let result = parse_input input in
-  print_endline (string_of_int result)
+  part_1();
+  part_2();
+  ()
